@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
+
 
 function setCookie(name, value) {
   const maxAge = 30 * 24 * 60 * 60;
   document.cookie = `${name}=${value}; max-age=${maxAge}; path=/`;
-  // const navigate = useNavigate();
-  // navigate("/");
 }
 
 function getCookie(name) {

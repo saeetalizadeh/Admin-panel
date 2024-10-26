@@ -73,10 +73,7 @@ function RegistrationPage() {
                   <button
                     onClick={(e) => {
                       e.preventDefault();
-                      setPasswordType((i) => {
-                        console.log(i);
-                        return [!i[0], i[1]];
-                      });
+                      setPasswordType((i) => [!i[0], i[1]]);
                     }}
                     className="block absolute outline-none left-3 text-blue-400 cursor-pointer top-1/3"
                   >

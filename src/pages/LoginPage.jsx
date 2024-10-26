@@ -29,7 +29,6 @@ function LoginPage() {
 
     mutate(form, {
       onSuccess: (data) => {
-        console.log(data.data);
         setCookie("token", data.data?.token);
         navigate("/");
       },
