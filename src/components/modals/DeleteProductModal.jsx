@@ -1,12 +1,11 @@
-import { deleteProduct } from "../../services/queries";
-function DeleteProductModal({
-  deleteProductModal,
-  setProductDeleteModal,
-  refetch,
-}) {
-  const deleteHandler = async () => {
-    await deleteProduct(deleteProductModal[1]);
-    await refetch();
+import { deleteProduct } from "../../services/mutations";
+function DeleteProductModal({ deleteProductModal, setProductDeleteModal }) {
+  const { mutate } = deleteProduct();
+  const deleteHandler = () => {
+    mutate(deleteProductModal[1], {
+      onSuccess: (data) => console.log(data),
+      onError: (error) => console.log(error),
+    });
     setProductDeleteModal([false, null]);
   };
 

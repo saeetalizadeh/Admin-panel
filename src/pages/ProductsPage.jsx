@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "../services/queries";
 import AddProductModal from "../components/modals/AddProductModal";
 import { useState } from "react";
@@ -9,10 +8,22 @@ function ProductsPage() {
   const [add, setAdd] = useState(false);
   const [deleteProductModal, setProductDeleteModal] = useState([false, null]);
   const [edit, setEdit] = useState([false, ""]);
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+  const [showMessage, setShowMessage] = useState("");
+  const [search, setSearch] = useState([]);
+  const { data, isLoading, isError, refetch } = getProducts();
+
+  const searchHandler = (e) => {
+    setShowMessage("");
+    const result = data.data.data.filter((item) =>
+      item.name.includes(e.target.value)
+    );
+    if (result.length > 0) {
+      setSearch(result);
+    } else {
+      setShowMessage("کالایی با این اسم پیدا نشد!");
+    }
+    console.log(result);
+  };
 
   return (
     <>
@@ -35,7 +46,9 @@ function ProductsPage() {
             alt="search icon"
           />
         </span>
+
         <input
+          onChange={searchHandler}
           type="text"
           placeholder="جستجوی کالا"
           className="pr-14 w-full placeholder:text-[#00000099] bg-inherit outline-none"
@@ -84,8 +97,48 @@ function ProductsPage() {
             شناسه کالا
           </span>
         </div>
-        {!isLoading && !isError
-          ? data?.data?.data.map((item) => (
+        {data?.data.data.length ? (
+          search.length > 0 ? (
+            showMessage.length > 0 ? (
+              <div className="grid myGrid14 px-10 w-full h-[70px] items-center last:rounded-b-2xl bg-[#ffffff]">
+                <span className="col-span-full text-center">
+                  {" "}
+                  {showMessage}
+                </span>
+              </div>
+            ) : (
+              search.map((item) => (
+                <div
+                  key={item.id}
+                  className="grid myGrid14 px-10 w-full h-[70px] items-center last:rounded-b-2xl bg-[#ffffff]"
+                >
+                  <span className="col-span-3 text-[#282828] font-normal text-[12px]">
+                    {item.name}
+                  </span>
+                  <span className="col-span-3 text-[#282828] font-normal text-[12px]">
+                    {item.quantity}
+                  </span>
+                  <span className="col-span-3 text-[#282828] font-normal text-[12px]">
+                    {item.price}
+                  </span>
+                  <span className="col-span-3 text-[#282828] font-normal text-[12px]">
+                    {item.id}
+                  </span>
+                  <span className="col-span-2 flex text-[#282828] font-normal text-[12px] justify-end gap-x-4">
+                    <button onClick={() => setEdit([true, item.id])}>
+                      <img src="/images/edit.svg" alt="edit icon" />
+                    </button>
+                    <button
+                      onClick={() => setProductDeleteModal([true, item.id])}
+                    >
+                      <img src="/images/trash.svg" alt="delete icon" />
+                    </button>
+                  </span>
+                </div>
+              ))
+            )
+          ) : (
+            data?.data.data.map((item) => (
               <div
                 key={item.id}
                 className="grid myGrid14 px-10 w-full h-[70px] items-center last:rounded-b-2xl bg-[#ffffff]"
@@ -114,7 +167,14 @@ function ProductsPage() {
                 </span>
               </div>
             ))
-          : null}
+          )
+        ) : (
+          <div className="grid myGrid14 px-10 w-full h-[70px] items-center last:rounded-b-2xl bg-[#ffffff]">
+            <span className="col-span-full text-center">
+              <h1>کالایی موجود نیست!</h1>
+            </span>
+          </div>
+        )}
       </div>
     </>
   );

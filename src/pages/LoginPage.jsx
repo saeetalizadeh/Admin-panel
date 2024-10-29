@@ -1,9 +1,9 @@
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../services/mutations";
-import { getCookie, setCookie } from "../utils/cookie";
+import { setCookie } from "../utils/cookie";
 
 function LoginPage() {
   const [passwordType, setPasswordType] = useState(true);

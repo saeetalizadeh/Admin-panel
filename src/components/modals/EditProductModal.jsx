@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { getProductById, putProduct } from "../../services/queries";
+import { getProductById } from "../../services/queries";
 import { useEffect, useState } from "react";
 
-function EditProductModal({ edit, setEdit, refetch }) {
+function EditProductModal({ edit, setEdit }) {
   const [editProduct, setEditProduct] = useState({
     id: "",
     name: "",
@@ -10,10 +9,7 @@ function EditProductModal({ edit, setEdit, refetch }) {
     quantity: "",
   });
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: [`products/${edit[1]}`],
-    queryFn: () => getProductById(edit[1]),
-  });
+  const { data, isLoading, isError } = getProductById(edit[1]);
 
   useEffect(() => {
     if (!isError && !isLoading) {
@@ -21,9 +17,7 @@ function EditProductModal({ edit, setEdit, refetch }) {
     }
   }, [data]);
 
-  const editProductHandler = async () => {
-    await putProduct(editProduct);
-    await refetch();
+  const editProductHandler = () => {
     setEdit([false, null]);
   };
 

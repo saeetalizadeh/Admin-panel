@@ -1,18 +1,30 @@
 import { useState } from "react";
-import { postProduct } from "../../services/queries";
+import { postProduct } from "../../services/mutations";
 
-function AddProductModal({ setAdd, refetch }) {
+function AddProductModal({ setAdd }) {
   const [product, setProduct] = useState({
     name: "",
     price: "",
     quantity: "",
   });
+  const { mutate } = postProduct(product);
+
   const changeHandler = (e) => {
     setProduct((product) => ({ ...product, [e.target.name]: e.target.value }));
   };
-  const createProductHandler = async () => {
-    await postProduct(product);
-    await refetch();
+  const createProductHandler = () => {
+    const { name, price } = product;
+
+    if (!name || !price) {
+      alert("Name and price doesnt exist");
+
+      return;
+    }
+
+    mutate(product, {
+      onSuccess: (data) => console.log(data),
+      onError: (error) => console.log(error),
+    });
     setAdd(false);
     document.body.style.overflow = "auto";
   };
