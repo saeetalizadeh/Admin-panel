@@ -1,3 +1,4 @@
+import { putProduct } from "../../services/mutations";
 import { getProductById } from "../../services/queries";
 import { useEffect, useState } from "react";
 
@@ -10,14 +11,19 @@ function EditProductModal({ edit, setEdit }) {
   });
 
   const { data, isLoading, isError } = getProductById(edit[1]);
+  const { mutate } = putProduct(edit[1]);
 
   useEffect(() => {
     if (!isError && !isLoading) {
-      setEditProduct(data);
+      setEditProduct(data?.data);
     }
   }, [data]);
 
   const editProductHandler = () => {
+    mutate(editProduct, {
+      onSuccess: (data) => console.log(data),
+      onError: (error) => console.log(error),
+    });
     setEdit([false, null]);
   };
 
